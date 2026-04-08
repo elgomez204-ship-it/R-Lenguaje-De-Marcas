@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persona>
+  <nombre>Juan</nombre>
+  <apellidos>Patino</apellidos>
+  <telefonos>
+    <telefono>98745214</telefono>
+    <telefono>69045123</telefono>
+    ...
+  </telefonos>
+</persona>
