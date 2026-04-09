@@ -1,0 +1,107 @@
+import smtplib
+from email.message import EmailMessage
+import os
+
+SMTP_SERVER = os.environ.get("EMAIL_SERVIDOR")
+SMTP_PORT = 587
+SMTP_USER = os.environ.get("EMAIL_USUARIO")
+SMTP_PASS = os.environ.get("EMAIL_CONTRASENA")
+
+msg = EmailMessage()
+msg["From"] = "info@empresa.com"
+msg["To"] = "cliente@empresa.com"
+msg["Subject"] = "Informe mensual de rendimiento"
+
+# --- Plain text fallback ---
+msg.set_content(
+    "Este correo contiene un informe empresarial en formato HTML.\n"
+    "Si no lo ves correctamente, usa un cliente compatible."
+)
+
+# --- HTML content ---
+html_content = """
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      td,th{padding:5px;}
+    </style>
+  </head>
+  <body>
+    <table border="0" style="font-family:sans-serif;text-align:justify;">
+      <tr>
+        <td style="width:10%"></td>
+        <td style="width:80%">
+          <table border="0" width="100%">
+            <tr>
+              <td>
+                <h1 style="text-align:center;">Informe mensual</h1>
+                <p>
+                  Este informe presenta el rendimiento general de la empresa.<br>
+                  Incluye datos de los siguientes departamentos:
+                </p>
+                <ul>
+                  <li>Ventas</li>
+                  <li>Marketing</li>
+                  <li>Operaciones</li>
+                  <li>Atención al cliente</li>
+                </ul>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table border="0" width="100%">
+                  <tr style="background:blue;color:white;">
+                    <th>Departamento</th>
+                    <th>Objetivo</th>
+                    <th>Resultado</th>
+                    <th>Rendimiento</th>
+                    <th>Estado</th>
+                  </tr>
+                  <tr>
+                    <td>Ventas</td>
+                    <td>50,000€</td><td>48,000€</td><td>96%</td><td>Bueno</td>
+                  </tr>
+                  <tr>
+                    <td>Marketing</td>
+                    <td>10,000 leads</td><td>12,000</td><td>120%</td><td>Excelente</td>
+                  </tr>
+                  <tr>
+                    <td>Operaciones</td>
+                    <td>95% eficiencia</td><td>92%</td><td>92%</td><td>Estable</td>
+                  </tr>
+                  <tr>
+                    <td>Atención al cliente</td>
+                    <td>90% satisfacción</td><td>94%</td><td>104%</td><td>Muy bueno</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <h3 style="text-align:center;">Observaciones</h3>
+                <p>
+                  Se recomienda reforzar el área de operaciones para mejorar la eficiencia.<br>
+                  El departamento de marketing ha superado los objetivos establecidos.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+        <td style="width:10%"></td>
+      </tr>
+    </table>
+  </body>
+</html>
+"""
+
+msg.add_alternative(html_content, subtype="html")
+
+# --- Send email ---
+with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as smtp:
+    smtp.starttls()
+    smtp.login(SMTP_USER, SMTP_PASS)
+    smtp.send_message(msg)
+
+print("Email sent")
